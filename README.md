@@ -21,7 +21,7 @@ FLIZpay SDK is available through Swift Package Manager.
 1. In Xcode, select `File > Add Packages...`
 2. Enter the repository URL:
 
-```https://github.com/yourusername/FLIZpaySDK.git```
+```https://github.com/Flizpay/flizpay-ios.git```
 
 3. Choose the desired version or branch, then add it to your project.
 
