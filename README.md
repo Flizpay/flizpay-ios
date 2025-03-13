@@ -12,20 +12,13 @@ Welcome to the FLIZpay iOS SDK! Easily integrate secure, seamless, and user-frie
 
 The FLIZpay SDK simplifies accepting payments by managing the entire payment flow via an integrated webview, securely and intuitively within your app.
 
----
-
-## 📦 Installation
-
-FLIZpay SDK is available through Swift Package Manager.
-
-1. In Xcode, select `File > Add Packages...`
-2. Enter the repository URL:
-
-```https://github.com/Flizpay/flizpay-ios.git```
-
-3. Choose the desired version or branch, then add it to your project.
+Get started with our 📚 [integration guide](https://www.docs.flizpay.de/docs/sdk/Installation)
 
 ---
+
+## 📦 Requirements
+
+The FLIZpay iOS SDK requires Xcode 15 or later and is compatible with apps targeting iOS 13 or above. 
 
 ## ⚡️ Quick Start
 
@@ -46,7 +39,7 @@ FlizpaySDK.initiatePayment(amount: "49.99", token: "YOUR_JWT_TOKEN")
 
 ## 📖 Detailed Integration Guide
 
-For comprehensive integration details, API authentication steps, obtaining JWT tokens, and additional examples, see our [Integration Documentation](#).
+For comprehensive integration details, API authentication steps, obtaining JWT tokens, and additional examples, see our [Integration Documentation](https://www.docs.flizpay.de/docs/sdk/Installation).
 
 ---
 
