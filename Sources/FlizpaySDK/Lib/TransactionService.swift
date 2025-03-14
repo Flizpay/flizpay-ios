@@ -36,6 +36,11 @@ struct TransactionRequest: Codable {
 
 // TransactionService makes the API call to fetch transaction info.
 public class TransactionService {
+    private let urlSession: URLSession
+
+    init(urlSession: URLSession = .shared) {
+        self.urlSession = urlSession
+    }
     
     /// Calls the /transactions endpoint using the provided token and amount.
     public func fetchTransactionInfo(
@@ -66,7 +71,7 @@ public class TransactionService {
             return
         }
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        self.urlSession.dataTask(with: request) { data, response, error in
             if let error = error {
                 completion(.failure(error))
                 return

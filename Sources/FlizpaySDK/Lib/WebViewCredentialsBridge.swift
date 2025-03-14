@@ -1,9 +1,8 @@
 import WebKit
 import Security
 
-class WebViewBridge: NSObject, WKScriptMessageHandler {
-    
-    private weak var webView: WKWebView?
+class WebViewBridge: NSObject, WKScriptMessageHandler, WebViewBridgeProtocol {
+    internal weak var webView: WKWebView?
     
     init(webView: WKWebView) {
         self.webView = webView

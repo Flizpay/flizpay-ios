@@ -4,8 +4,8 @@ import WebKit
 public class FlizpayWebView: UIViewController {
     
     public var redirectUrl: URL?
-    private var webView: WKWebView?
-    private var webViewBridge: WebViewBridge? // ✅ Declare it with var
+    internal var webView: WKWebView?
+    internal var webViewBridge: WebViewBridgeProtocol?
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +26,7 @@ public class FlizpayWebView: UIViewController {
         presentingVC.present(flizpayWebView, animated: true, completion: nil)
     }
 
-    private func setupWebView() {
+    internal func setupWebView() {
         let config = WKWebViewConfiguration()
         let contentController = WKUserContentController()
         config.userContentController = contentController
@@ -44,7 +44,7 @@ public class FlizpayWebView: UIViewController {
         ])
 
         self.webView = wv
-        self.webViewBridge = WebViewBridge(webView: wv) 
+        self.webViewBridge = WebViewBridge(webView: wv)
         self.webViewBridge?.register(in: contentController)
         self.webViewBridge?.injectJavaScriptInterface()
     }
