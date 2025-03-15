@@ -4,6 +4,7 @@
 [![Swift](https://img.shields.io/badge/swift-5-orange)](https://swift.org/)
 [![SPM Compatible](https://img.shields.io/badge/SPM-compatible-brightgreen)](https://swift.org/package-manager/)
 [![Version](https://img.shields.io/github/v/tag/Flizpay/flizpay-ios)](https://github.com/Flizpay/flizpay-ios/releases)
+[![Passing](https://github.com/Flizpay/flizpay-ios/actions/workflows/run-tests.yml/badge.svg?branch=main&event=pull_request_target)](https://github.com/Flizpay/flizpay-ios/actions/workflows/run-tests.yml)
 [![License](https://img.shields.io/github/license/Flizpay/flizpay-ios)](LICENSE)
 
 Welcome to the FLIZpay iOS SDK! Easily integrate secure, seamless, and user-friendly payments directly into your iOS app.
