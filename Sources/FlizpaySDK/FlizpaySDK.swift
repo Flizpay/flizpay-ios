@@ -18,7 +18,7 @@ public class FlizpaySDK {
         from presentingVC: UIViewController,
         token: String,
         amount: String,
-        transactionService: TransactionService?,
+        transactionService: TransactionService? = nil,
         onFailure: ((Error) -> Void)? = nil
     ) {
         let transactionService = transactionService ?? TransactionService()
