@@ -39,14 +39,14 @@ jobs:
             echo "Coverage data not found!"
             exit 1
           fi
-          
+
           mkdir -p coverage
           xcrun xccov view --report --json $COVERAGE_DIR > coverage/coverage.json
           
-          # Convert JSON to LCOV format
-          curl -L https://raw.githubusercontent.com/gparker42/xccov-to-lcov/master/xccov-to-lcov.swift -o xccov-to-lcov.swift
-          swift xccov-to-lcov.swift coverage/coverage.json > coverage/lcov.info
-          
+          # Convert to LCOV manually
+          xcrun xccov view --file-list $COVERAGE_DIR > coverage/files.txt
+          xcrun xccov view --report $COVERAGE_DIR > coverage/lcov.info
+
           echo "Coverage report generated."
 
       - name: Upload to Coveralls
