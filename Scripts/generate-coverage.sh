@@ -12,3 +12,5 @@ xcrun llvm-cov export \
   "DerivedData/Build/Products/Debug-iphonesimulator/FlizpaySDK.o" \
   --instr-profile=$INSTR_PROFILE \
   --ignore-filename-regex=$IGNORE_FILENAME_REGEX > $OUTPUT_FILE
+
+echo "Coverage report generated at $OUTPUT_FILE"
