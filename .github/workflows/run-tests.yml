@@ -25,29 +25,13 @@ jobs:
 
       - name: Run All Tests with Coverage
         run: |
-          chmod +x ./Tests/run-tests.sh
-          ./Tests/run-tests.sh
+          chmod +x ./Scripts/run-tests.sh
+          ./Scripts/run-tests.sh
 
-      - name: Find Coverage Data
+      - name: Colelct Coverage Data
         run: |
-          COVERAGE_DIR=$(find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" | tail -1)
-          echo "COVERAGE_DIR=$COVERAGE_DIR" >> $GITHUB_ENV
-
-      - name: Convert Coverage Data to LCOV
-        run: |
-          if [ -z "$COVERAGE_DIR" ]; then
-            echo "Coverage data not found!"
-            exit 1
-          fi
-
-          mkdir -p coverage
-          xcrun xccov view --report --json $COVERAGE_DIR > coverage/coverage.json
-          
-          # Convert to LCOV manually
-          xcrun xccov view --file-list $COVERAGE_DIR > coverage/files.txt
-          xcrun xccov view --report $COVERAGE_DIR > coverage/lcov.info
-
-          echo "Coverage report generated."
+          chmod +x ./Scripts/generate-coverage.sh
+          ./Scripts/generate-coverage.sh
 
       - name: Upload to Coveralls
         uses: coverallsapp/github-action@v2
