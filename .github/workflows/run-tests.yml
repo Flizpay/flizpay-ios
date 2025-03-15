@@ -22,16 +22,26 @@ jobs:
 
       - name: Run All Tests with Coverage
         run: |
-          chmod +x ./Tests/run-tests.sh && ./Tests/run-tests.sh
+          chmod +x ./Tests/run-tests.sh
+          ./Tests/run-tests.sh
+
+      - name: Find Coverage Data
+        run: |
+          COVERAGE_DIR=$(find ~/Library/Developer/Xcode/DerivedData -name "*.xcresult" | tail -1)
+          echo "COVERAGE_DIR=$COVERAGE_DIR" >> $GITHUB_ENV
 
       - name: Convert Coverage Data to LCOV
         run: |
-          xcrun llvm-cov export -format=lcov \
-            $(find ~/Library/Developer/Xcode/DerivedData -name "Coverage.profdata") \
-            -instr-profile $(find ~/Library/Developer/Xcode/DerivedData -name "default.profdata") > coverage.lcov
+          if [ -z "$COVERAGE_DIR" ]; then
+            echo "Coverage data not found!"
+            exit 1
+          fi
+          
+          xcrun xccov view --report --json $COVERAGE_DIR > coverage.json
+          echo "Coverage report generated."
 
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v4
         with:
           name: code-coverage-report
-          path: coverage.lcov
+          path: coverage.json
