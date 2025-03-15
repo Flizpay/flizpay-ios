@@ -3,8 +3,10 @@
 [![Platform](https://img.shields.io/badge/platform-iOS-blue)](https://developer.apple.com/ios/)
 [![Swift](https://img.shields.io/badge/swift-5-orange)](https://swift.org/)
 [![SPM Compatible](https://img.shields.io/badge/SPM-compatible-brightgreen)](https://swift.org/package-manager/)
-[![Version](https://img.shields.io/github/v/tag/yourusername/FLIZpaySDK)](https://github.com/yourusername/FLIZpaySDK/releases)
-[![License](https://img.shields.io/github/license/yourusername/FLIZpaySDK)](LICENSE)
+[![Version](https://img.shields.io/github/v/tag/Flizpay/flizpay-ios)](https://github.com/Flizpay/flizpay-ios/releases)
+[![Passing](https://github.com/Flizpay/flizpay-ios/actions/workflows/run-tests.yml/badge.svg?branch=main&event=pull_request_target)](https://github.com/Flizpay/flizpay-ios/actions/workflows/run-tests.yml)
+[![Coverage Status](https://coveralls.io/repos/github/Flizpay/flizpay-ios/badge.svg?branch=main)](https://coveralls.io/github/Flizpay/flizpay-ios?branch=main)
+[![License](https://img.shields.io/github/license/Flizpay/flizpay-ios)](LICENSE)
 
 Welcome to the FLIZpay iOS SDK! Easily integrate secure, seamless, and user-friendly payments directly into your iOS app.
 
@@ -22,19 +24,29 @@ The FLIZpay iOS SDK requires Xcode 15 or later and is compatible with apps targe
 
 ## ⚡️ Quick Start
 
-After installing the SDK, initiate payments effortlessly:
+After installing the SDK, initiate payments effortlessly by: 
+- authorizing your transaction with the `API_KEY` in your backend to obtain a token
+- use it to load the FLIZPay environment in your application
 
 ```swift
 import FlizpaySDK
 
-FlizpaySDK.initiatePayment(amount: "49.99", token: "YOUR_JWT_TOKEN")
+FlizpaySDK.initiatePayment(
+    from: currentViewController,
+    token: token,
+    amount: userAmount
+) { error in
+    // Handle any error returned from the SDK.
+    print("Payment failed: \(error)")
+}
 ```
 
 ### Parameters
 
+- **`from`** (`UIViewController`, required): The Presenting View Controller where the webview is going to be attached
+- **`token`** (`String`, required): JWT authentication token obtained from your backend (Check our docs on how to authenticate).
 - **`amount`** (`String`, required): The payment amount.
-- **`token`** (`String`, optional): JWT authentication token obtained from your backend.
-
+- **`@closure onFailure `** (`Function`, optional): Block that receives an error param to be called when the webview can't be opened
 ---
 
 ## 📖 Detailed Integration Guide
@@ -51,9 +63,9 @@ FLIZpay SDK is available under the MIT license. See the [LICENSE](LICENSE) file 
 
 ## 🛟 Support
 
-Need assistance? Our support team is here to help.
+Need assistance?
 
-👉 [Contact FLIZpay Support](https://support.flizpay.de)
+👉 [Talk to our devs](https://support.flizpay.de)
 
 ---
 
