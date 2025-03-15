@@ -38,6 +38,7 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           file: ./coverage/coverage.json
+          format: coveralls
           allow-empty: true
           debug: true
           measure: true
