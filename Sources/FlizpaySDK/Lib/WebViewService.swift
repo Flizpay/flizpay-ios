@@ -44,7 +44,7 @@ public class FlizpayWebView: UIViewController {
         ])
 
         self.webView = wv
-        self.webViewBridge = WebViewBridge(webView: wv)
+        self.webViewBridge = WebViewBridge(webView: wv, presentingVC: self)
         self.webViewBridge?.register(in: contentController)
         self.webViewBridge?.injectJavaScriptInterface()
     }

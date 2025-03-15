@@ -3,9 +3,11 @@ import Security
 
 class WebViewBridge: NSObject, WKScriptMessageHandler, WebViewBridgeProtocol {
     internal weak var webView: WKWebView?
+    internal weak var presentingVC: UIViewController?
     
-    init(webView: WKWebView) {
+    init(webView: WKWebView, presentingVC: UIViewController) {
         self.webView = webView
+        self.presentingVC = presentingVC
     }
     
     // Injects the JavaScript bridge into the WebView
@@ -22,6 +24,14 @@ class WebViewBridge: NSObject, WKScriptMessageHandler, WebViewBridgeProtocol {
                 window.webkit.messageHandlers.clearCredentials.postMessage({ key: key });
             }
         };
+        Object.defineProperty(window, 'close', {
+            configurable: true,
+            writable: true,
+            value: function() {
+                window.webkit.messageHandlers.closeWebView.postMessage({ close: true });
+            }
+        });
+
         """
         
         let script = WKUserScript(source: js, injectionTime: .atDocumentStart, forMainFrameOnly: false)
@@ -33,6 +43,7 @@ class WebViewBridge: NSObject, WKScriptMessageHandler, WebViewBridgeProtocol {
         userContentController.add(self, name: "saveCredentials")
         userContentController.add(self, name: "getCredentials")
         userContentController.add(self, name: "clearCredentials")
+        userContentController.add(self, name: "closeWebView")
     }
     
     // Handles incoming messages from JavaScript
@@ -57,6 +68,10 @@ class WebViewBridge: NSObject, WKScriptMessageHandler, WebViewBridgeProtocol {
             if let key = body["key"] as? String {
                 KeychainService.clearCredentials(key: key)
             }
+        case "closeWebView":
+            DispatchQueue.main.async {
+                self.presentingVC?.dismiss(animated: true, completion: nil)
+                        }
         default:
             break
         }
