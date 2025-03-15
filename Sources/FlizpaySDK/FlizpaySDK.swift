@@ -35,7 +35,6 @@ public class FlizpaySDK {
                         redirectUrl: redirectUrl,
                         jwt: token
                     )
-                    print("Payment Initiated")
                 case .failure(let error):
                     onFailure?(error)
                 }

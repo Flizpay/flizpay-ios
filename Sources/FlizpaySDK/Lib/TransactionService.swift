@@ -94,14 +94,8 @@ public class TransactionService {
                 return
             }
             
-            // Debug: Print raw response JSON.
-            if let rawJson = String(data: data, encoding: .utf8) {
-                print("Raw response JSON: \(rawJson)")
-            }
-            
             do {
                 let transactionResponse = try JSONDecoder().decode(TransactionResponse.self, from: data)
-                print("Parsed Response:", transactionResponse)
                 completion(.success(transactionResponse))
             } catch {
                 completion(.failure(error))

@@ -28,7 +28,6 @@ public class FlizpayWebView: UIViewController {
     public func present(from presentingVC: UIViewController, redirectUrl: String, jwt: String) {
         let flizpayWebView = FlizpayWebView()
         let redirectUrlWithJwtToken = "\(redirectUrl)&jwt=\(jwt)"
-        print("url is", redirectUrlWithJwtToken)
         
         flizpayWebView.redirectUrl = URL(string: redirectUrlWithJwtToken)
         presentingVC.present(flizpayWebView, animated: true, completion: nil)

@@ -30,8 +30,6 @@ class FlizpayWebViewTests: XCTestCase {
         // When
         sut.viewDidLoad()
         // Then
-        print(url)
-        print(sut.webView!.url!)
         XCTAssertEqual(sut.webView!.url, url, "Assert webview URL")
     }
     
