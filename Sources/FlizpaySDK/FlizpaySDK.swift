@@ -9,11 +9,11 @@ public class FlizpaySDK {
     /// Initiates the payment flow within your SDK.
     ///
     /// - Parameters:
-    ///   - presentingVC: The UIViewController from which to present the payment web view.
+    ///   - presentingVC: The `UIViewController` from which to present the payment web view.
     ///   - token: The JWT token fetched by the host app.
     ///   - amount: The transaction amount.
     ///   - transactionService: Inject the transaction service, for mockup purposes
-    ///   - onFailure: Optional closure if you want to handle errors (e.g., show alerts).
+    ///   - onFailure: Optional completion closure if you want to handle errors (e.g., show alerts).
     public static func initiatePayment(
         from presentingVC: UIViewController,
         token: String,

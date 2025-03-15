@@ -1,8 +1,8 @@
 import Foundation
 
-/// TransactionResponse is the response model for the /transactions endpoint.
-/// - Attributes:
-///   - redirectUrl: The URL to the FLIZPay gateway.
+/// TransactionResponse is the response model for the `/transactions` endpoint.
+/// 
+/// - redirectUrl: The URL to the FLIZPay gateway.
 public struct TransactionResponse: Codable {
     let redirectUrl: String?
 
@@ -29,21 +29,21 @@ public struct TransactionResponse: Codable {
     }
 }
 
-/// TransactionRequest is the request model for the /transactions endpoint.
-/// - Attributes:
-///   - amount: The transaction amount.
-///   - currency: The currency of the transaction.
-///   - source: The source of the transaction.
+/// TransactionRequest is the request model for the `/transactions` endpoint.
+/// 
+///  - amount: The transaction amount.
+///  - currency: The currency of the transaction - Default to: `EUR`.
+///  - source: The source of the transaction - Default: `sdk_integration`.
 struct TransactionRequest: Codable {
     let amount: String
-    let currency: String
-    let source: String
+    let currency: String = "EUR"
+    let source: String = "sdk_integration"
 }
 
-// TransactionService makes the API call to fetch the transaction info.
-// It uses the URLSession to make the network request.
-// The fetchTransactionInfo method takes a token and amount as input and returns a TransactionResponse.
-// The completion handler returns a Result type with either the TransactionResponse or an Error.
+/// TransactionService makes the API call to fetch the transaction info.
+/// It uses the `URLSession` to make the network request.
+/// The `fetchTransactionInfo` method receives a token and amount as input and returns a `TransactionResponse`.
+/// The completion handler returns a `Result` type with either the `TransactionResponse` or an `Error`.
 public class TransactionService {
     private let urlSession: URLSession
 
@@ -52,10 +52,11 @@ public class TransactionService {
     }
     
     /// Fetches the transaction info from the FLIZPay backend.
+    ///
     /// - Parameters:
-    ///  - token: The JWT token fetched by the host app.
-    ///  - amount: The transaction amount.
-    ///  - completion: The completion handler with the TransactionResponse or an Error.
+    ///   - token: The JWT token fetched by the host app.
+    ///   - amount: The transaction amount.
+    ///   - completion: The completion handler with the `TransactionResponse` or an `Error`.
     public func fetchTransactionInfo(
         token: String,
         amount: String,
@@ -68,14 +69,11 @@ public class TransactionService {
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
-        
-        // Set the token in the header as expected by your backend.
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authentication")
-        // Set JSON content type.
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        // Create the transaction request with amount, currency "EUR", and source "sdk_integration"
-        let body = TransactionRequest(amount: amount, currency: "EUR", source: "sdk_integration")
+        let body = TransactionRequest(amount: amount)
+
         do {
             let jsonData = try JSONEncoder().encode(body)
             request.httpBody = jsonData

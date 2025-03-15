@@ -2,9 +2,9 @@ import WebKit
 import Security
 
 /// Implementation of the WebViewBridgeProtocol
-/// that injects a JavaScript interface into a WKWebView
-/// and handles incoming messages from JavaScript such as window.close()
-/// and allows FLIZPay to save, fetch and delete credentials in the keychain.
+/// that injects a JavaScript interface into a `WKWebView`
+/// and handles incoming messages from JavaScript such as `window.close()`
+/// and allows FLIZPay to save, fetch and delete the Bank credentials in the `Keychain`.
 class WebViewBridge: NSObject, WKScriptMessageHandler, WebViewBridgeProtocol {
     internal weak var webView: WKWebView?
     
