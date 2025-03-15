@@ -1,6 +1,9 @@
 import UIKit
 import WebKit
 
+/// The FlizpayWebView class.
+/// This class is responsible for presenting the payment web view.
+/// It fetches the transaction info from FLIZpay and presents the payment web view.
 public class FlizpayWebView: UIViewController {
     
     public var redirectUrl: URL?
@@ -17,6 +20,11 @@ public class FlizpayWebView: UIViewController {
         }
     }
 
+    /// Presents the payment web view.
+    /// - Parameters:
+    ///  - presentingVC: The UIViewController from which to present the payment web view.
+    ///  - redirectUrl: The redirect URL for the payment web view.
+    ///  - jwt: The JWT token fetched by the host app.
     public func present(from presentingVC: UIViewController, redirectUrl: String, jwt: String) {
         let flizpayWebView = FlizpayWebView()
         let redirectUrlWithJwtToken = "\(redirectUrl)&jwt=\(jwt)"

@@ -24,3 +24,7 @@ build/
 *~
 *.dat
 *.dep
+
+# Test & Coverage
+coverage
+DerivedData

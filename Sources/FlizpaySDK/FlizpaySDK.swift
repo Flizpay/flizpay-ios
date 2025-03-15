@@ -1,5 +1,9 @@
 import UIKit
 
+/// The Flizpay SDK class.
+/// This class is the entry point for the SDK.
+/// It provides a method to initiate the payment flow.
+/// The method fetches the transaction info from FLIZpay and presents the payment web view. 
 public class FlizpaySDK {
     
     /// Initiates the payment flow within your SDK.

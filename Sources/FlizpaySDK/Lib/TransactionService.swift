@@ -1,6 +1,8 @@
 import Foundation
 
-// TransactionResponse decodes the nested "redirectUrl" from within the "data" object.
+/// TransactionResponse is the response model for the /transactions endpoint.
+/// - Attributes:
+///   - redirectUrl: The URL to the FLIZPay gateway.
 public struct TransactionResponse: Codable {
     let redirectUrl: String?
 
@@ -27,14 +29,21 @@ public struct TransactionResponse: Codable {
     }
 }
 
-// TransactionRequest is used to send the request data.
+/// TransactionRequest is the request model for the /transactions endpoint.
+/// - Attributes:
+///   - amount: The transaction amount.
+///   - currency: The currency of the transaction.
+///   - source: The source of the transaction.
 struct TransactionRequest: Codable {
     let amount: String
     let currency: String
     let source: String
 }
 
-// TransactionService makes the API call to fetch transaction info.
+// TransactionService makes the API call to fetch the transaction info.
+// It uses the URLSession to make the network request.
+// The fetchTransactionInfo method takes a token and amount as input and returns a TransactionResponse.
+// The completion handler returns a Result type with either the TransactionResponse or an Error.
 public class TransactionService {
     private let urlSession: URLSession
 
@@ -42,7 +51,11 @@ public class TransactionService {
         self.urlSession = urlSession
     }
     
-    /// Calls the /transactions endpoint using the provided token and amount.
+    /// Fetches the transaction info from the FLIZPay backend.
+    /// - Parameters:
+    ///  - token: The JWT token fetched by the host app.
+    ///  - amount: The transaction amount.
+    ///  - completion: The completion handler with the TransactionResponse or an Error.
     public func fetchTransactionInfo(
         token: String,
         amount: String,
