@@ -11,31 +11,14 @@ let package = Package(
     products: [
         .library(
             name: "FlizpaySDK",
-            targets: ["FlizpaySDK"]
-        ),
-        .library(
-            name: "Lib",
-            targets: ["Lib"]
-        )
+            targets: ["FlizpaySDK"]),
     ],
-    dependencies: [
-        // Add dependencies if needed
-    ],
+    dependencies: [],
     targets: [
         .target(
-            name: "FlizpaySDK",
-            dependencies: [],
-            path: "Sources/FlizpaySDK"
-        ),
-        .target(
-            name: "Lib",
-            dependencies: [],
-            path: "Sources/Lib"
-        ),
+            name: "FlizpaySDK"),
         .testTarget(
             name: "FlizpaySDKTests",
-            dependencies: ["FlizpaySDK"],
-            path: "Tests/FlizpaySDKTests"
-        )
+            dependencies: ["FlizpaySDK"]),
     ]
 )

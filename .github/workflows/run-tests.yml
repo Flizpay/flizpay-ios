@@ -1,0 +1,37 @@
+name: iOS SDK Tests
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode Version
+        run: sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
+
+      - name: Run All Tests with Coverage
+        run: |
+          chmod +x ./Tests/run-tests.sh && ./Tests/run-tests.sh
+
+      - name: Convert Coverage Data to LCOV
+        run: |
+          xcrun llvm-cov export -format=lcov \
+            $(find ~/Library/Developer/Xcode/DerivedData -name "Coverage.profdata") \
+            -instr-profile $(find ~/Library/Developer/Xcode/DerivedData -name "default.profdata") > coverage.lcov
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: coverage.lcov
