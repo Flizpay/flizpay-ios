@@ -1,5 +1,5 @@
 #!/bin/sh
-OUTPUT_FILE="coverage/lcov.info"
+OUTPUT_FILE="coverage/coverage.json"
 IGNORE_FILENAME_REGEX=".build|Tests|Pods|Carthage|DerivedData"
 BUILD_PATH="DerivedData"
 
