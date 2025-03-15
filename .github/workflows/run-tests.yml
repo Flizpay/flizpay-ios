@@ -19,10 +19,9 @@ jobs:
 
       - name: Select Xcode Version
         run: sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
-      
+
       - name: Resolve Dependencies
-        run: |
-          xcodebuild -resolvePackageDependencies
+        run: xcodebuild -resolvePackageDependencies
 
       - name: Run All Tests with Coverage
         run: |
@@ -41,11 +40,17 @@ jobs:
             exit 1
           fi
           
-          xcrun xccov view --report --json $COVERAGE_DIR > coverage.json
+          mkdir -p coverage
+          xcrun xccov view --report --json $COVERAGE_DIR > coverage/coverage.json
+          
+          # Convert JSON to LCOV format
+          curl -L https://raw.githubusercontent.com/gparker42/xccov-to-lcov/master/xccov-to-lcov.swift -o xccov-to-lcov.swift
+          swift xccov-to-lcov.swift coverage/coverage.json > coverage/lcov.info
+          
           echo "Coverage report generated."
 
-      - name: Upload Coverage Report
-        uses: actions/upload-artifact@v4
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@v2
         with:
-          name: code-coverage-report
-          path: coverage.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: coverage/lcov.info
