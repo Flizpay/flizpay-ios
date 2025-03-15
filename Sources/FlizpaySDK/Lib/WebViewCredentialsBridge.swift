@@ -1,15 +1,18 @@
 import WebKit
 import Security
 
-class WebViewBridge: NSObject, WKScriptMessageHandler {
-    
-    private weak var webView: WKWebView?
+/// Implementation of the WebViewBridgeProtocol
+/// that injects a JavaScript interface into a `WKWebView`
+/// and handles incoming messages from JavaScript such as `window.close()`
+/// and allows FLIZPay to save, fetch and delete the Bank credentials in the `Keychain`.
+class WebViewBridge: NSObject, WKScriptMessageHandler, WebViewBridgeProtocol {
+    internal weak var webView: WKWebView?
     
     init(webView: WKWebView) {
         self.webView = webView
     }
     
-    // Injects the JavaScript bridge into the WebView
+    /// Injects the JavaScript bridge into the WebView
     func injectJavaScriptInterface() {
         let js = """
         window.KeychainBridge = {
@@ -29,14 +32,14 @@ class WebViewBridge: NSObject, WKScriptMessageHandler {
         webView?.configuration.userContentController.addUserScript(script)
     }
     
-    // Registers message handlers
+    /// Registers message handlers
     func register(in userContentController: WKUserContentController) {
         userContentController.add(self, name: "saveCredentials")
         userContentController.add(self, name: "getCredentials")
         userContentController.add(self, name: "clearCredentials")
     }
     
-    // Handles incoming messages from JavaScript
+    /// Handles incoming messages from JavaScript
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let body = message.body as? [String: Any] else { return }
         

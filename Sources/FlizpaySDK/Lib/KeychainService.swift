@@ -1,6 +1,10 @@
 import Foundation
 import Security
 
+/// KeychainService is a simple wrapper around the Keychain Services API
+/// that allows to store, fetch and delete credentials.
+/// The credentials are stored in the keychain as generic passwords.
+/// The keychain item is accessible only when the device is unlocked.
 class KeychainService {
     
     static func storeCredentials(key: String, value: String) {

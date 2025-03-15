@@ -1,11 +1,14 @@
 import UIKit
 import WebKit
 
+/// The FlizpayWebView class.
+/// This class is responsible for presenting the payment web view.
+/// It fetches the transaction info from FLIZpay and presents the payment web view.
 public class FlizpayWebView: UIViewController {
     
     public var redirectUrl: URL?
-    private var webView: WKWebView?
-    private var webViewBridge: WebViewBridge? // ✅ Declare it with var
+    internal var webView: WKWebView?
+    internal var webViewBridge: WebViewBridgeProtocol?
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,16 +20,21 @@ public class FlizpayWebView: UIViewController {
         }
     }
 
+    /// Presents the payment web view.
+    ///
+    /// - Parameters:
+    ///   - presentingVC: The `UIViewController` from which to present the payment web view.
+    ///   - redirectUrl: The redirect URL for the payment web view.
+    ///   - jwt: The JWT token fetched by the host app.
     public func present(from presentingVC: UIViewController, redirectUrl: String, jwt: String) {
         let flizpayWebView = FlizpayWebView()
         let redirectUrlWithJwtToken = "\(redirectUrl)&jwt=\(jwt)"
-        print("url is", redirectUrlWithJwtToken)
         
         flizpayWebView.redirectUrl = URL(string: redirectUrlWithJwtToken)
         presentingVC.present(flizpayWebView, animated: true, completion: nil)
     }
 
-    private func setupWebView() {
+    internal func setupWebView() {
         let config = WKWebViewConfiguration()
         let contentController = WKUserContentController()
         config.userContentController = contentController
@@ -44,7 +52,7 @@ public class FlizpayWebView: UIViewController {
         ])
 
         self.webView = wv
-        self.webViewBridge = WebViewBridge(webView: wv) 
+        self.webViewBridge = WebViewBridge(webView: wv)
         self.webViewBridge?.register(in: contentController)
         self.webViewBridge?.injectJavaScriptInterface()
     }

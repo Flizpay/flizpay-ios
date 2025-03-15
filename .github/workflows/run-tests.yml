@@ -1,0 +1,43 @@
+name: iOS SDK Tests
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  test:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Select Xcode Version
+        run: sudo xcode-select -switch /Applications/Xcode.app/Contents/Developer
+
+      - name: Resolve Dependencies
+        run: xcodebuild -resolvePackageDependencies
+
+      - name: Run All Tests with Coverage
+        run: |
+          chmod +x ./Scripts/run-tests.sh
+          ./Scripts/run-tests.sh
+
+      - name: Colelct Coverage Data
+        run: |
+          chmod +x ./Scripts/generate-coverage.sh
+          ./Scripts/generate-coverage.sh
+
+      - name: Upload to Coveralls
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          allow-empty: true
+          debug: true
+          measure: true
+
