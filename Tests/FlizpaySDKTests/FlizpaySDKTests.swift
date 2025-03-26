@@ -29,7 +29,7 @@ class FlizpaySDKTests: XCTestCase {
         mockTransactionService.mockResult = .success(mockResponse)
         
         // When
-        FlizpaySDK.initiatePayment(from: mockViewController, token: "mock-token", amount: "100.00", transactionService: mockTransactionService) { error in
+        FlizpaySDK.initiatePayment(from: mockViewController, token: "mock-token", amount: "100.00", urlScheme: "iosdemo://test?foo=bar", transactionService: mockTransactionService) { error in
             // Then
             XCTAssertNil(error)
         }
@@ -43,7 +43,7 @@ class FlizpaySDKTests: XCTestCase {
         mockTransactionService.mockResult = .failure("Invalid Token")
         
         // When
-        FlizpaySDK.initiatePayment(from: mockViewController, token: "invalid-token", amount: "100.00", transactionService: mockTransactionService) { error in
+        FlizpaySDK.initiatePayment(from: mockViewController, token: "invalid-token", amount: "100.00", urlScheme: "iosdemo://test?foo=bar", transactionService: mockTransactionService) { error in
             // Then
             XCTAssertNotNil(error)
             expectation.fulfill()
