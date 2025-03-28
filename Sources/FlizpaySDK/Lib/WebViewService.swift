@@ -63,39 +63,43 @@ public class FlizpayWebView: UIViewController {
         self.webViewBridge?.register(in: contentController)
         self.webViewBridge?.injectJavaScriptInterface()
     }
+    
+    internal func decidePolicy(for url: URL) -> WKNavigationActionPolicy {
+        guard url.scheme == "https",
+              let host = url.host,
+              noCredentialsBankHosts.contains(where: { host.contains($0) }),
+              UIApplication.shared.canOpenURL(url) else {
+            return .allow
+        }
+        
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        return .cancel
+    }
 }
 
 
 extension FlizpayWebView: WKNavigationDelegate {
-        // Computed property returning the array of bank host fragments.
-        private var noCredentialsBankHosts: [String] {
-            return [
-                "ing-diba.de",   // ING-DiBa
-                "revolut.com",   // Revolut
-                "consorsbank.de",// Consorsbank
-                "n26.com",       // N26
-                "tomorrow.one",  // Tomorrow (example host)
-                "kontist.com",   // Kontist
-                "finom.com"      // Finom
-            ]
-        }
+
+    private var noCredentialsBankHosts: [String] {
+        return [
+            "ing-diba.de",   // ING-DiBa
+            "revolut.com",   // Revolut
+            "consorsbank.de",// Consorsbank
+            "n26.com",       // N26
+            "tomorrow.one",  // Tomorrow (example host)
+            "kontist.com",   // Kontist
+            "finom.com"      // Finom
+        ]
+    }
     
-    
-    public func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
+    // Delegate method now defers to the helper:
+    public func webView(_ webView: WKWebView,
+                        decidePolicyFor navigationAction: WKNavigationAction,
                         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-         if let url = navigationAction.request.url {
-            // Check if the URL is a universal link that should open the native app.
-            // Here we check if the host is one we expect to be handled as a universal link.
-            // For example, for Revolut, the host might be "oba.revolut.com".
-            if url.scheme == "https",
-               let host = url.host,
-               noCredentialsBankHosts.contains(where: { host.contains($0) }),
-               UIApplication.shared.canOpenURL(url) {
-                UIApplication.shared.open(url, options: [:], completionHandler: nil)
-                decisionHandler(.cancel)
-                return
-            }
+        if let url = navigationAction.request.url {
+            decisionHandler(decidePolicy(for: url))
+        } else {
+            decisionHandler(.allow)
         }
-        decisionHandler(.allow)
     }
 }
