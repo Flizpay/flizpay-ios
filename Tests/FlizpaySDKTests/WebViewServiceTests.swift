@@ -80,35 +80,35 @@ class FlizpayWebViewTests: XCTestCase {
             
             // Then
             XCTAssertEqual(policy, .allow, "Non-https should be allowed")
-        }
+    }
         
-        func testDecidePolicy_forUnlistedHost_allowsNavigation() {
-            // Given
-            let url = URL(string: "https://some-other-bank.com")!
-            
-            // When
-            let policy = sut.decidePolicy(for: url)
-            
-            // Then
-            XCTAssertEqual(policy, .allow, "Hosts not in noCredentialsBankHosts should be allowed")
-        }
+    func testDecidePolicy_forUnlistedHost_allowsNavigation() {
+        // Given
+        let url = URL(string: "https://some-other-bank.com")!
         
-        func testDecidePolicy_forKnownBankHost_withCanOpenURLCancelPolicy() {
-            // Given
-            let testVC = TestableFlizpayWebView()
-            var openCalled = false
+        // When
+        let policy = sut.decidePolicy(for: url)
+        
+        // Then
+        XCTAssertEqual(policy, .allow, "Hosts not in noCredentialsBankHosts should be allowed")
+    }
+    
+    func testDecidePolicy_forKnownBankHost_withCanOpenURLCancelPolicy() {
+        // Given
+        let testVC = TestableFlizpayWebView()
+        var openCalled = false
 
-            testVC.mockCanOpenURL = { _ in true }
-            testVC.mockOpen = { _ in openCalled = true }
+        testVC.mockCanOpenURL = { _ in true }
+        testVC.mockOpen = { _ in openCalled = true }
 
-            let url = URL(string: "https://tomorrow.one/redirect-me")!
+        let url = URL(string: "https://tomorrow.one/redirect-me")!
 
-            // When
-            let policy = testVC.decidePolicy(for: url)
+        // When
+        let policy = testVC.decidePolicy(for: url)
 
-            // Then
-            XCTAssertEqual(policy, .cancel, "Should cancel if host is recognized and app can open")
-            XCTAssertTrue(openCalled, "Expected UIApplication.open to be called")
-        }
+        // Then
+        XCTAssertEqual(policy, .cancel, "Should cancel if host is recognized and app can open")
+        XCTAssertTrue(openCalled, "Expected UIApplication.open to be called")
+    }
     
 }
