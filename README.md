@@ -31,7 +31,7 @@ Add the following to your `Package.swift` dependencies:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/Flizpay/flizpay-ios.git", from: "0.2.0")
+    .package(url: "https://github.com/Flizpay/flizpay-ios.git", from: "0.2.1")
 ]
 ```
 
@@ -40,7 +40,7 @@ dependencies: [
 Add the following to your `Podfile`:
 
 ```ruby
-pod 'FlizpaySDK', '~> 0.2.0'
+pod 'FlizpaySDK', '~> 0.2.1'
 ```
 
 Then run:
