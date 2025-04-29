@@ -36,8 +36,14 @@ public struct TransactionResponse: Codable {
 ///  - source: The source of the transaction - Default: `sdk_integration`.
 struct TransactionRequest: Codable {
     let amount: String
-    let currency: String = "EUR"
-    let source: String = "sdk_integration"
+    let currency: String
+    let source: String
+    
+    init(amount: String, currency: String = "EUR", source: String = "sdk_integration") {
+        self.amount = amount
+        self.currency = currency
+        self.source = source
+    }
 }
 
 /// TransactionService makes the API call to fetch the transaction info.

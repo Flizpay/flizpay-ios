@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'FlizpaySDK'
-  s.version          = '0.2.0'
+  s.version          = '0.2.1'
   s.summary          = 'Flizpay iOS SDK'
   s.description      = 'iOS SDK for integrating Flizpay payment services'
   s.homepage         = 'https://github.com/Flizpay/flizpay-ios'
