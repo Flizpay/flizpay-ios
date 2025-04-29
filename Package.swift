@@ -18,6 +18,7 @@ let package = Package(
         .target(
             name: "FlizpaySDK",
             cSettings: [
+                // Explicitly specifying architectures for Simulators compatibility
                 .unsafeFlags(["-arch", "x86_64", "-arch", "arm64"])
             ]),
         .testTarget(
