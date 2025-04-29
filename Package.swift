@@ -16,7 +16,10 @@ let package = Package(
     dependencies: [],
     targets: [
         .target(
-            name: "FlizpaySDK"),
+            name: "FlizpaySDK",
+            cSettings: [
+                .unsafeFlags(["-arch", "x86_64", "-arch", "arm64"])
+            ]),
         .testTarget(
             name: "FlizpaySDKTests",
             dependencies: ["FlizpaySDK"]),
