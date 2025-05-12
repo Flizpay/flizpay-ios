@@ -38,11 +38,13 @@ struct TransactionRequest: Codable {
     let amount: String
     let currency: String
     let source: String
+    let metadata: [String: Any]?
     
-    init(amount: String, currency: String = "EUR", source: String = "sdk_integration") {
+    init(amount: String, metadata: [String: Any]? = nil, currency: String = "EUR", source: String = "sdk_integration") {
         self.amount = amount
         self.currency = currency
         self.source = source
+        self.metadata = metadata
     }
 }
 
@@ -66,6 +68,7 @@ public class TransactionService {
     public func fetchTransactionInfo(
         token: String,
         amount: String,
+        metadata: [String: Any]? = nil,
         completion: @escaping (Result<TransactionResponse, Error>) -> Void
     ) {
         guard let url = URL(string: "\(Constants.apiURL)/transactions") else {
@@ -78,7 +81,7 @@ public class TransactionService {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authentication")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        let body = TransactionRequest(amount: amount)
+        let body = TransactionRequest(amount: amount, metadata: metadata)
 
         do {
             let jsonData = try JSONEncoder().encode(body)

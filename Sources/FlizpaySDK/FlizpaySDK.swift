@@ -19,12 +19,13 @@ public class FlizpaySDK {
         from presentingVC: UIViewController,
         token: String,
         amount: String,
+        metadata: [String: Any]? = nil,
         urlScheme: String,
         transactionService: TransactionService? = nil,
         onFailure: ((Error) -> Void)? = nil
     ) {
         let transactionService = transactionService ?? TransactionService()
-        transactionService.fetchTransactionInfo(token: token, amount: amount) { result in
+        transactionService.fetchTransactionInfo(token: token, amount: amount, metadata: metadata) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let transactionResponse):
