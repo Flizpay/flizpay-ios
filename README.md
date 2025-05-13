@@ -31,7 +31,7 @@ Add the following to your `Package.swift` dependencies:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/Flizpay/flizpay-ios.git", from: "0.2.1")
+    .package(url: "https://github.com/Flizpay/flizpay-ios.git", from: "0.2.2")
 ]
 ```
 
@@ -40,7 +40,7 @@ dependencies: [
 Add the following to your `Podfile`:
 
 ```ruby
-pod 'FlizpaySDK', '~> 0.2.1'
+pod 'FlizpaySDK', '~> 0.2.2'
 ```
 
 Then run:
@@ -62,6 +62,7 @@ FlizpaySDK.initiatePayment(
     from: currentViewController,
     token: token,
     amount: userAmount
+    metadata: metadataInfo
 ) { error in
     // Handle any error returned from the SDK.
     print("Payment failed: \(error)")
@@ -73,6 +74,7 @@ FlizpaySDK.initiatePayment(
 - **`from`** (`UIViewController`, required): The Presenting View Controller where the webview is going to be attached
 - **`token`** (`String`, required): JWT authentication token obtained from your backend (Check our docs on how to authenticate).
 - **`amount`** (`String`, required): The payment amount.
+- **`metadata`** (`JSONValue, optional): The metadata info
 - **`@closure onFailure `** (`Function`, optional): Block that receives an error param to be called when the webview can't be opened
 ---
 
