@@ -64,4 +64,42 @@ class TransactionServiceTests: XCTestCase {
         
         wait(for: [expectation], timeout: 1.0)
     }
+    
+    func testInitiatePaymentDeepMetadataFailure() {
+        // Given
+        let expectation = expectation(description: "Fetch transaction info fails")
+        mockURLSession.mockData = MockResponses.wrongDataFormat
+        mockURLSession.mockResponse = HTTPURLResponse(url: URL(string: "https://api.flizpay.com")!,
+                                                    statusCode: 400,
+                                                    httpVersion: nil,
+                                                    headerFields: nil)
+            
+            // Construct a 6‑level deep metadata JSONValue structure.
+            let deepMetadata: [String: JSONValue] = [
+                "level1": .object([
+                    "level2": .object([
+                        "level3": .object([
+                            "level4": .object([
+                                "level5": .object([
+                                    "level6": .string("bottom")
+                                ])
+                            ])
+                        ])
+                    ])
+                ])
+            ]
+        
+        // When
+        sut.fetchTransactionInfo(token: "invalid-token", amount: "100.00", metadata: deepMetadata) { result in
+            // Then
+            switch result {
+            case .success:
+                XCTFail("Should fail")
+            case .failure(let error):
+                XCTAssertNotNil(error)
+            }
+            expectation.fulfill()
+        }
+            wait(for: [expectation], timeout: 1.0)
+        }
 }
