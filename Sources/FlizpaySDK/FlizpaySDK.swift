@@ -12,6 +12,7 @@ public class FlizpaySDK {
     ///   - presentingVC: The `UIViewController` from which to present the payment web view.
     ///   - token: The JWT token fetched by the host app.
     ///   - amount: The transaction amount.
+    ///   - metadata: The metadata object
     ///   - urlScheme: The application url scheme.
     ///   - transactionService: Inject the transaction service, for mockup purposes
     ///   - onFailure: Optional completion closure if you want to handle errors (e.g., show alerts).
@@ -19,7 +20,7 @@ public class FlizpaySDK {
         from presentingVC: UIViewController,
         token: String,
         amount: String,
-        metadata: [String: Any]? = nil,
+        metadata: [String: JSONValue]? = nil,
         urlScheme: String,
         transactionService: TransactionService? = nil,
         onFailure: ((Error) -> Void)? = nil

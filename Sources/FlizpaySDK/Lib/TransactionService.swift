@@ -1,5 +1,23 @@
 import Foundation
 
+public enum JSONValue: Encodable {
+    case string(String), int(Int), double(Double), bool(Bool)
+    case array([JSONValue]), object([String: JSONValue]), null
+
+    public func encode(to encoder: Encoder) throws {
+        var c = encoder.singleValueContainer()
+        switch self {
+        case .string(let v):  try c.encode(v)
+        case .int(let v):     try c.encode(v)
+        case .double(let v):  try c.encode(v)
+        case .bool(let v):    try c.encode(v)
+        case .array(let v):   try c.encode(v)
+        case .object(let v):  try c.encode(v)
+        case .null:           try c.encodeNil()
+        }
+    }
+}
+
 /// TransactionResponse is the response model for the `/transactions` endpoint.
 /// 
 /// - redirectUrl: The URL to the FLIZPay gateway.
@@ -34,13 +52,14 @@ public struct TransactionResponse: Codable {
 ///  - amount: The transaction amount.
 ///  - currency: The currency of the transaction - Default to: `EUR`.
 ///  - source: The source of the transaction - Default: `sdk_integration`.
-struct TransactionRequest: Codable {
+///  - metadata: The metadata object
+struct TransactionRequest: Encodable {
     let amount: String
     let currency: String
     let source: String
-    let metadata: [String: Any]?
+    let metadata: [String: JSONValue]?
     
-    init(amount: String, metadata: [String: Any]? = nil, currency: String = "EUR", source: String = "sdk_integration") {
+    init(amount: String, metadata: [String: JSONValue]? = nil, currency: String = "EUR", source: String = "sdk_integration") {
         self.amount = amount
         self.currency = currency
         self.source = source
@@ -64,11 +83,12 @@ public class TransactionService {
     /// - Parameters:
     ///   - token: The JWT token fetched by the host app.
     ///   - amount: The transaction amount.
+    ///   - metadata: The metadata object
     ///   - completion: The completion handler with the `TransactionResponse` or an `Error`.
     public func fetchTransactionInfo(
         token: String,
         amount: String,
-        metadata: [String: Any]? = nil,
+        metadata: [String: JSONValue]? = nil,
         completion: @escaping (Result<TransactionResponse, Error>) -> Void
     ) {
         guard let url = URL(string: "\(Constants.apiURL)/transactions") else {
