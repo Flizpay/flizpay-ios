@@ -61,7 +61,7 @@ import FlizpaySDK
 FlizpaySDK.initiatePayment(
     from: currentViewController,
     token: token,
-    amount: userAmount
+    amount: userAmount,
     metadata: metadataInfo
 ) { error in
     // Handle any error returned from the SDK.
