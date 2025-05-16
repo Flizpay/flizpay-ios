@@ -82,7 +82,7 @@ extension FlizpayWebView: WKNavigationDelegate {
 
     private var noCredentialsBankHosts: [String] {
         return [
-            "ing-diba.de",   // ING-DiBa
+            "myaccount.ing.com",   // ING-DiBa
             "revolut.com",   // Revolut
             "consorsbank.de",// Consorsbank
             "n26.com",       // N26
