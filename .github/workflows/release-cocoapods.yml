@@ -1,0 +1,36 @@
+name: Release to CocoaPods
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  release:
+    name: Release to CocoaPods
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+        
+    - name: Install CocoaPods
+      run: gem install cocoapods
+      
+    - name: Extract version from tag
+      id: version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        
+    - name: Validate podspec
+      run: pod spec lint FlizpaySDK.podspec --allow-warnings
+      
+    - name: Push to CocoaPods
+      env:
+        COCOAPODS_TRUNK_TOKEN: ${{ secrets.COCOAPODS_TRUNK_TOKEN }}
+      run: pod trunk push FlizpaySDK.podspec --allow-warnings
