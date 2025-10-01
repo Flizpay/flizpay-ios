@@ -35,6 +35,12 @@ dependencies: [
 ]
 ```
 
+### Clone https://github.com/Flizpay/ios-demo
+
+Then clone https://github.com/Flizpay/ios-demo and open it with XCode.
+Ask to be added to the FlizPay GmbH Team (and set the team in XCode)
+Make sure to build the project for a simulator, not for MacOS or TVOs
+
 ### CocoaPods
 
 Add the following to your `Podfile`:
@@ -51,7 +57,8 @@ pod install
 
 ## ⚡️ Quick Start
 
-After installing the SDK, initiate payments effortlessly by: 
+After installing the SDK, initiate payments effortlessly by:
+
 - authorizing your transaction with the `API_KEY` in your backend to obtain a token
 - use it to load the FLIZPay environment in your application
 
@@ -76,6 +83,7 @@ FlizpaySDK.initiatePayment(
 - **`amount`** (`String`, required): The payment amount.
 - **`metadata`** (`JSONValue, optional): The metadata info
 - **`@closure onFailure `** (`Function`, optional): Block that receives an error param to be called when the webview can't be opened
+
 ---
 
 ## 📖 Detailed Integration Guide
@@ -99,4 +107,3 @@ Need assistance?
 ---
 
 Happy coding! 🚀🎉
-
