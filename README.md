@@ -41,9 +41,9 @@ Then clone https://github.com/Flizpay/ios-demo and open it with XCode.
 Ask to be added to the Apple developer "FlizPay GmbH Team" (and set the team in XCode)
 Make sure to build the project for a simulator, not for MacOS or TVOs
 
-### Update urls to point to tailscale
+### Update URLs to point to your local environment (development only)
 
-Update the urls in `Sources/FlizpaySDK/Constants.swift` to point to your local environment (if needed)
+For local development, update the URLs in `Sources/FlizpaySDK/Constants.swift` to point to your Tailscale environment. **Do not commit these changes to the repository.**
 
 ### Check that the buisness has needed fields in mongoDB
 
