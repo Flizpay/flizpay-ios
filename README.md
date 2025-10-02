@@ -38,8 +38,18 @@ dependencies: [
 ### Clone https://github.com/Flizpay/ios-demo
 
 Then clone https://github.com/Flizpay/ios-demo and open it with XCode.
-Ask to be added to the FlizPay GmbH Team (and set the team in XCode)
+Ask to be added to the Apple developer "FlizPay GmbH Team" (and set the team in XCode)
 Make sure to build the project for a simulator, not for MacOS or TVOs
+
+### Update urls to point to tailscale
+
+Update the urls in `Sources/FlizpaySDK/Constants.swift` to point to your local environment (if needed)
+
+### Check that the buisness has needed fields in mongoDB
+
+For the Webview to work, the business item in mongoDB must have this value:
+`integrationType: "App SDK"`
+Otherwise, you will see this error: `'Business is not an SDK integration'`
 
 ### CocoaPods
 
