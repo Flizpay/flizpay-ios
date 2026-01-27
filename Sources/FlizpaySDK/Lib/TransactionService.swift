@@ -73,9 +73,14 @@ struct TransactionRequest: Encodable {
 /// The completion handler returns a `Result` type with either the `TransactionResponse` or an `Error`.
 public class TransactionService {
     private let urlSession: URLSession
+    private let effectiveApiUrl: String
+    private let effectiveBaseUrl: String
 
-    init(urlSession: URLSession = .shared) {
+    init(apiUrl: String? = nil, baseUrl: String? = nil, urlSession: URLSession = .shared) {
         self.urlSession = urlSession
+        // Use provided URLs or fallback to production defaults
+        self.effectiveApiUrl = apiUrl?.isEmpty == false ? apiUrl! : Constants.apiURL
+        self.effectiveBaseUrl = baseUrl?.isEmpty == false ? baseUrl! : Constants.baseURL
     }
     
     /// Fetches the transaction info from the FLIZPay backend.
@@ -92,11 +97,11 @@ public class TransactionService {
         completion: @escaping (Result<TransactionResponse, Error>) -> Void
     ) {
         print("🔵 [FlizpaySDK] fetchTransactionInfo called")
-        print("🔵 [FlizpaySDK] API URL: \(Constants.apiURL)/transactions")
+        print("🔵 [FlizpaySDK] API URL: \(effectiveApiUrl)/transactions")
         print("🔵 [FlizpaySDK] Token: \(token)")
         print("🔵 [FlizpaySDK] Amount: \(amount)")
         
-        guard let url = URL(string: "\(Constants.apiURL)/transactions") else {
+        guard let url = URL(string: "\(effectiveApiUrl)/transactions") else {
             print("🔴 [FlizpaySDK] Invalid URL")
             completion(.failure(NSError(domain: "Invalid URL", code: -1, userInfo: nil)))
             return
