@@ -91,7 +91,13 @@ public class TransactionService {
         metadata: [String: JSONValue]? = nil,
         completion: @escaping (Result<TransactionResponse, Error>) -> Void
     ) {
+        print("🔵 [FlizpaySDK] fetchTransactionInfo called")
+        print("🔵 [FlizpaySDK] API URL: \(Constants.apiURL)/transactions")
+        print("🔵 [FlizpaySDK] Token: \(token)")
+        print("🔵 [FlizpaySDK] Amount: \(amount)")
+        
         guard let url = URL(string: "\(Constants.apiURL)/transactions") else {
+            print("🔴 [FlizpaySDK] Invalid URL")
             completion(.failure(NSError(domain: "Invalid URL", code: -1, userInfo: nil)))
             return
         }
@@ -106,25 +112,40 @@ public class TransactionService {
         do {
             let jsonData = try JSONEncoder().encode(body)
             request.httpBody = jsonData
+            if let jsonString = String(data: jsonData, encoding: .utf8) {
+                print("🔵 [FlizpaySDK] Request body: \(jsonString)")
+            }
         } catch {
+            print("🔴 [FlizpaySDK] Failed to encode request: \(error)")
             completion(.failure(error))
             return
         }
         
         self.urlSession.dataTask(with: request) { data, response, error in
             if let error = error {
+                print("🔴 [FlizpaySDK] Network error: \(error.localizedDescription)")
                 completion(.failure(error))
                 return
             }
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("🔵 [FlizpaySDK] HTTP Status Code: \(httpResponse.statusCode)")
+            }
+            
             guard let data = data else {
+                print("🔴 [FlizpaySDK] No data received")
                 completion(.failure(NSError(domain: "No Data", code: -1, userInfo: nil)))
                 return
             }
             
+            print("🔵 [FlizpaySDK] Response data: \(String(data: data, encoding: .utf8) ?? "Unable to decode")")
+            
             do {
                 let transactionResponse = try JSONDecoder().decode(TransactionResponse.self, from: data)
+                print("✅ [FlizpaySDK] Successfully decoded transaction response")
                 completion(.success(transactionResponse))
             } catch {
+                print("🔴 [FlizpaySDK] Decoding error: \(error)")
                 completion(.failure(error))
             }
         }.resume()
