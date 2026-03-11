@@ -2,7 +2,7 @@ import XCTest
 import WebKit
 @testable import FlizpaySDK
 
-private final class PresentingViewControllerSpy: UIViewController {
+private final class WebViewPresentingViewControllerSpy: UIViewController {
     var capturedPresentedViewController: UIViewController?
 
     override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
@@ -122,7 +122,7 @@ class FlizpayWebViewTests: XCTestCase {
 
     func testPresent_encodesUrlSchemeBeforeAppendingRedirectUrl() {
         // Given
-        let presentingVC = PresentingViewControllerSpy()
+        let presentingVC = WebViewPresentingViewControllerSpy()
         let webView = FlizpayWebView()
 
         // When
