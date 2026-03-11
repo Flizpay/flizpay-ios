@@ -2,6 +2,15 @@ import XCTest
 import WebKit
 @testable import FlizpaySDK
 
+private final class PresentingViewControllerSpy: UIViewController {
+    var capturedPresentedViewController: UIViewController?
+
+    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        capturedPresentedViewController = viewControllerToPresent
+        completion?()
+    }
+}
+
 class FlizpayWebViewTests: XCTestCase {
     var sut: FlizpayWebView!
     var mockWebViewBridge: MockWebViewBridge!
@@ -109,6 +118,28 @@ class FlizpayWebViewTests: XCTestCase {
         // Then
         XCTAssertEqual(policy, .cancel, "Should cancel if host is recognized and app can open")
         XCTAssertTrue(openCalled, "Expected UIApplication.open to be called")
+    }
+
+    func testPresent_encodesUrlSchemeBeforeAppendingRedirectUrl() {
+        // Given
+        let presentingVC = PresentingViewControllerSpy()
+        let webView = FlizpayWebView()
+
+        // When
+        webView.present(
+            from: presentingVC,
+            redirectUrl: "https://example.com/checkout?payment=123",
+            urlScheme: "flizdemo://payment-return?foo=bar",
+            jwt: "mock-token"
+        )
+
+        // Then
+        let presentedWebView = presentingVC.capturedPresentedViewController as? FlizpayWebView
+        XCTAssertNotNil(presentedWebView)
+        XCTAssertEqual(
+            presentedWebView?.redirectUrl?.absoluteString,
+            "https://example.com/checkout?payment=123&jwt=mock-token&redirect-url=flizdemo%3A%2F%2Fpayment-return%3Ffoo%3Dbar"
+        )
     }
     
 }

@@ -30,7 +30,9 @@ public class FlizpayWebView: UIViewController {
     ///   - jwt: The JWT token fetched by the host app.
     public func present(from presentingVC: UIViewController, redirectUrl: String, urlScheme: String, jwt: String) {
         let flizpayWebView = FlizpayWebView()
-        let redirectUrlWithJwtToken = "\(redirectUrl)&jwt=\(jwt)&redirect-url=\(urlScheme)"
+        let allowedCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-._~"))
+        let encodedUrlScheme = urlScheme.addingPercentEncoding(withAllowedCharacters: allowedCharacters) ?? urlScheme
+        let redirectUrlWithJwtToken = "\(redirectUrl)&jwt=\(jwt)&redirect-url=\(encodedUrlScheme)"
         
         flizpayWebView.redirectUrl = URL(string: redirectUrlWithJwtToken)
         flizpayWebView.urlScheme = urlScheme
@@ -45,6 +47,10 @@ public class FlizpayWebView: UIViewController {
 
         let wv = WKWebView(frame: .zero, configuration: config)
         wv.translatesAutoresizingMaskIntoConstraints = false
+        
+        if #available(iOS 16.4, *) {
+              wv.isInspectable = true
+        }
 
         // Set the navigation delegate to self to intercept deep links
         wv.navigationDelegate = self
