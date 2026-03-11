@@ -120,7 +120,7 @@ class FlizpayWebViewTests: XCTestCase {
         XCTAssertTrue(openCalled, "Expected UIApplication.open to be called")
     }
 
-    func testPresent_addsQueryItemsToRedirectUrlThatAlreadyContainsQuery() {
+    func testPresent_addsQueryItemsToRedirectUrlThatAlreadyContainsQuery() throws {
         // Given
         let presentingVC = WebViewPresentingViewControllerSpy()
         let webView = FlizpayWebView()
@@ -147,7 +147,7 @@ class FlizpayWebViewTests: XCTestCase {
         XCTAssertEqual(queryItems.first(where: { $0.name == "redirect-url" })?.value, "flizdemo://payment-return?foo=bar")
     }
 
-    func testPresent_addsFirstQueryItemsToRedirectUrlWithoutQuery() {
+    func testPresent_addsFirstQueryItemsToRedirectUrlWithoutQuery() throws {
         // Given
         let presentingVC = WebViewPresentingViewControllerSpy()
         let webView = FlizpayWebView()
