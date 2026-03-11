@@ -1,9 +1,11 @@
 import XCTest
 @testable import FlizpaySDK
 
-extension String: Error {}
+private enum MockTestError: Error {
+    case invalidToken
+}
 
-private final class PresentingViewControllerSpy: UIViewController {
+final class PresentingViewControllerSpy: UIViewController {
     var presentExpectation: XCTestExpectation?
     var capturedPresentedViewController: UIViewController?
 
@@ -53,7 +55,7 @@ class FlizpaySDKTests: XCTestCase {
     func testInitiatePaymentFailure() {
         // Given
         let expectation = expectation(description: "Payment initiation fails")
-        mockTransactionService.mockResult = .failure("Invalid Token")
+        mockTransactionService.mockResult = .failure(MockTestError.invalidToken)
         
         // When
         FlizpaySDK.initiatePayment(from: mockViewController, token: "invalid-token", amount: "100.00", urlScheme: "flizdemo://test?foo=bar", transactionService: mockTransactionService) { error in
