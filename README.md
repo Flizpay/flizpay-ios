@@ -67,10 +67,10 @@ pod install
 
 ## ⚡️ Quick Start
 
-After installing the SDK, initiate payments effortlessly by:
+After installing the SDK, register your app callback URL scheme and initiate payments by:
 
 - authorizing your transaction with the `API_KEY` in your backend to obtain a token
-- use it to load the FLIZPay environment in your application
+- using it to load the FLIZPay environment in your application
 
 ```swift
 import FlizpaySDK
@@ -79,20 +79,28 @@ FlizpaySDK.initiatePayment(
     from: currentViewController,
     token: token,
     amount: userAmount,
-    metadata: metadataInfo
+    metadata: metadataInfo,
+    urlScheme: "myapp://flizpay-return"
 ) { error in
     // Handle any error returned from the SDK.
     print("Payment failed: \(error)")
 }
 ```
 
+Make sure the scheme part of `urlScheme` is declared in your app's `Info.plist` under `CFBundleURLTypes`.
+
 ### Parameters
 
 - **`from`** (`UIViewController`, required): The Presenting View Controller where the webview is going to be attached
 - **`token`** (`String`, required): JWT authentication token obtained from your backend (Check our docs on how to authenticate).
 - **`amount`** (`String`, required): The payment amount.
-- **`metadata`** (`JSONValue, optional): The metadata info
-- **`@closure onFailure `** (`Function`, optional): Block that receives an error param to be called when the webview can't be opened
+- **`metadata`** (`[String: JSONValue]`, optional): The metadata info
+- **`urlScheme`** (`String`, required): The app callback URL used to return the user to your app after redirect-based bank authorization.
+- **`@closure onFailure`** (`Function`, optional): Block that receives an error param to be called when the webview can't be opened
+
+### Redirect-based Bank Flows
+
+For redirect-based banks such as Revolut or ING, the SDK forwards `urlScheme` to FLIZpay payer-web so the user can return to your app after authorization in the bank app.
 
 ---
 

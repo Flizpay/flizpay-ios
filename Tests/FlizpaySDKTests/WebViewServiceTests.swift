@@ -2,6 +2,15 @@ import XCTest
 import WebKit
 @testable import FlizpaySDK
 
+private final class WebViewPresentingViewControllerSpy: UIViewController {
+    var capturedPresentedViewController: UIViewController?
+
+    override func present(_ viewControllerToPresent: UIViewController, animated flag: Bool, completion: (() -> Void)? = nil) {
+        capturedPresentedViewController = viewControllerToPresent
+        completion?()
+    }
+}
+
 class FlizpayWebViewTests: XCTestCase {
     var sut: FlizpayWebView!
     var mockWebViewBridge: MockWebViewBridge!
@@ -109,6 +118,59 @@ class FlizpayWebViewTests: XCTestCase {
         // Then
         XCTAssertEqual(policy, .cancel, "Should cancel if host is recognized and app can open")
         XCTAssertTrue(openCalled, "Expected UIApplication.open to be called")
+    }
+
+    func testPresent_addsQueryItemsToRedirectUrlThatAlreadyContainsQuery() throws {
+        // Given
+        let presentingVC = WebViewPresentingViewControllerSpy()
+        let webView = FlizpayWebView()
+
+        // When
+        webView.present(
+            from: presentingVC,
+            redirectUrl: "https://example.com/checkout?payment=123",
+            urlScheme: "flizdemo://payment-return?foo=bar",
+            jwt: "mock-token"
+        )
+
+        // Then
+        let presentedWebView = presentingVC.capturedPresentedViewController as? FlizpayWebView
+        XCTAssertNotNil(presentedWebView)
+        let components = URLComponents(url: try XCTUnwrap(presentedWebView?.redirectUrl), resolvingAgainstBaseURL: false)
+        let queryItems = try XCTUnwrap(components?.queryItems)
+
+        XCTAssertEqual(components?.scheme, "https")
+        XCTAssertEqual(components?.host, "example.com")
+        XCTAssertEqual(components?.path, "/checkout")
+        XCTAssertEqual(queryItems.first(where: { $0.name == "payment" })?.value, "123")
+        XCTAssertEqual(queryItems.first(where: { $0.name == "jwt" })?.value, "mock-token")
+        XCTAssertEqual(queryItems.first(where: { $0.name == "redirect-url" })?.value, "flizdemo://payment-return?foo=bar")
+    }
+
+    func testPresent_addsFirstQueryItemsToRedirectUrlWithoutQuery() throws {
+        // Given
+        let presentingVC = WebViewPresentingViewControllerSpy()
+        let webView = FlizpayWebView()
+
+        // When
+        webView.present(
+            from: presentingVC,
+            redirectUrl: "https://example.com/checkout",
+            urlScheme: "flizdemo://payment-return",
+            jwt: "mock-token"
+        )
+
+        // Then
+        let presentedWebView = presentingVC.capturedPresentedViewController as? FlizpayWebView
+        XCTAssertNotNil(presentedWebView)
+        let components = URLComponents(url: try XCTUnwrap(presentedWebView?.redirectUrl), resolvingAgainstBaseURL: false)
+        let queryItems = try XCTUnwrap(components?.queryItems)
+
+        XCTAssertEqual(components?.scheme, "https")
+        XCTAssertEqual(components?.host, "example.com")
+        XCTAssertEqual(components?.path, "/checkout")
+        XCTAssertEqual(queryItems.first(where: { $0.name == "jwt" })?.value, "mock-token")
+        XCTAssertEqual(queryItems.first(where: { $0.name == "redirect-url" })?.value, "flizdemo://payment-return")
     }
     
 }

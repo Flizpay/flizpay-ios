@@ -74,13 +74,10 @@ struct TransactionRequest: Encodable {
 public class TransactionService {
     private let urlSession: URLSession
     private let effectiveApiUrl: String
-    private let effectiveBaseUrl: String
 
-    init(apiUrl: String? = nil, baseUrl: String? = nil, urlSession: URLSession = .shared) {
+    init(urlSession: URLSession = .shared) {
         self.urlSession = urlSession
-        // Use provided URLs or fallback to production defaults
-        self.effectiveApiUrl = apiUrl?.isEmpty == false ? apiUrl! : Constants.apiURL
-        self.effectiveBaseUrl = baseUrl?.isEmpty == false ? baseUrl! : Constants.baseURL
+        self.effectiveApiUrl = Constants.apiURL
     }
     
     /// Fetches the transaction info from the FLIZPay backend.
