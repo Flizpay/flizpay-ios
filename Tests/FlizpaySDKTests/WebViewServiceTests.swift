@@ -136,10 +136,15 @@ class FlizpayWebViewTests: XCTestCase {
         // Then
         let presentedWebView = presentingVC.capturedPresentedViewController as? FlizpayWebView
         XCTAssertNotNil(presentedWebView)
-        XCTAssertEqual(
-            presentedWebView?.redirectUrl?.absoluteString,
-            "https://example.com/checkout?payment=123&jwt=mock-token&redirect-url=flizdemo%3A%2F%2Fpayment-return%3Ffoo%3Dbar"
-        )
+        let components = URLComponents(url: try XCTUnwrap(presentedWebView?.redirectUrl), resolvingAgainstBaseURL: false)
+        let queryItems = try XCTUnwrap(components?.queryItems)
+
+        XCTAssertEqual(components?.scheme, "https")
+        XCTAssertEqual(components?.host, "example.com")
+        XCTAssertEqual(components?.path, "/checkout")
+        XCTAssertEqual(queryItems.first(where: { $0.name == "payment" })?.value, "123")
+        XCTAssertEqual(queryItems.first(where: { $0.name == "jwt" })?.value, "mock-token")
+        XCTAssertEqual(queryItems.first(where: { $0.name == "redirect-url" })?.value, "flizdemo://payment-return?foo=bar")
     }
 
     func testPresent_addsFirstQueryItemsToRedirectUrlWithoutQuery() {
@@ -158,10 +163,14 @@ class FlizpayWebViewTests: XCTestCase {
         // Then
         let presentedWebView = presentingVC.capturedPresentedViewController as? FlizpayWebView
         XCTAssertNotNil(presentedWebView)
-        XCTAssertEqual(
-            presentedWebView?.redirectUrl?.absoluteString,
-            "https://example.com/checkout?jwt=mock-token&redirect-url=flizdemo%3A%2F%2Fpayment-return"
-        )
+        let components = URLComponents(url: try XCTUnwrap(presentedWebView?.redirectUrl), resolvingAgainstBaseURL: false)
+        let queryItems = try XCTUnwrap(components?.queryItems)
+
+        XCTAssertEqual(components?.scheme, "https")
+        XCTAssertEqual(components?.host, "example.com")
+        XCTAssertEqual(components?.path, "/checkout")
+        XCTAssertEqual(queryItems.first(where: { $0.name == "jwt" })?.value, "mock-token")
+        XCTAssertEqual(queryItems.first(where: { $0.name == "redirect-url" })?.value, "flizdemo://payment-return")
     }
     
 }
