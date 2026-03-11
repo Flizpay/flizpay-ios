@@ -120,7 +120,7 @@ class FlizpayWebViewTests: XCTestCase {
         XCTAssertTrue(openCalled, "Expected UIApplication.open to be called")
     }
 
-    func testPresent_encodesUrlSchemeBeforeAppendingRedirectUrl() {
+    func testPresent_addsQueryItemsToRedirectUrlThatAlreadyContainsQuery() {
         // Given
         let presentingVC = WebViewPresentingViewControllerSpy()
         let webView = FlizpayWebView()
@@ -139,6 +139,28 @@ class FlizpayWebViewTests: XCTestCase {
         XCTAssertEqual(
             presentedWebView?.redirectUrl?.absoluteString,
             "https://example.com/checkout?payment=123&jwt=mock-token&redirect-url=flizdemo%3A%2F%2Fpayment-return%3Ffoo%3Dbar"
+        )
+    }
+
+    func testPresent_addsFirstQueryItemsToRedirectUrlWithoutQuery() {
+        // Given
+        let presentingVC = WebViewPresentingViewControllerSpy()
+        let webView = FlizpayWebView()
+
+        // When
+        webView.present(
+            from: presentingVC,
+            redirectUrl: "https://example.com/checkout",
+            urlScheme: "flizdemo://payment-return",
+            jwt: "mock-token"
+        )
+
+        // Then
+        let presentedWebView = presentingVC.capturedPresentedViewController as? FlizpayWebView
+        XCTAssertNotNil(presentedWebView)
+        XCTAssertEqual(
+            presentedWebView?.redirectUrl?.absoluteString,
+            "https://example.com/checkout?jwt=mock-token&redirect-url=flizdemo%3A%2F%2Fpayment-return"
         )
     }
     

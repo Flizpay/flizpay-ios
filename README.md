@@ -96,7 +96,7 @@ Make sure the scheme part of `urlScheme` is declared in your app's `Info.plist` 
 - **`amount`** (`String`, required): The payment amount.
 - **`metadata`** (`[String: JSONValue]`, optional): The metadata info
 - **`urlScheme`** (`String`, required): The app callback URL used to return the user to your app after redirect-based bank authorization.
-- **`@closure onFailure `** (`Function`, optional): Block that receives an error param to be called when the webview can't be opened
+- **`@closure onFailure`** (`Function`, optional): Block that receives an error param to be called when the webview can't be opened
 
 ### Redirect-based Bank Flows
 

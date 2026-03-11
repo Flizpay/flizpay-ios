@@ -30,9 +30,20 @@ public class FlizpayWebView: UIViewController {
     ///   - jwt: The JWT token fetched by the host app.
     public func present(from presentingVC: UIViewController, redirectUrl: String, urlScheme: String, jwt: String) {
         let flizpayWebView = FlizpayWebView()
-        let allowedCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-._~"))
-        let encodedUrlScheme = urlScheme.addingPercentEncoding(withAllowedCharacters: allowedCharacters) ?? urlScheme
-        let redirectUrlWithJwtToken = "\(redirectUrl)&jwt=\(jwt)&redirect-url=\(encodedUrlScheme)"
+        let redirectUrlWithJwtToken: String
+
+        if var components = URLComponents(string: redirectUrl) {
+            var queryItems = components.queryItems ?? []
+            queryItems.append(URLQueryItem(name: "jwt", value: jwt))
+            queryItems.append(URLQueryItem(name: "redirect-url", value: urlScheme))
+            components.queryItems = queryItems
+            redirectUrlWithJwtToken = components.string ?? redirectUrl
+        } else {
+            let allowedCharacters = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-._~"))
+            let encodedUrlScheme = urlScheme.addingPercentEncoding(withAllowedCharacters: allowedCharacters) ?? urlScheme
+            let separator = redirectUrl.contains("?") ? "&" : "?"
+            redirectUrlWithJwtToken = "\(redirectUrl)\(separator)jwt=\(jwt)&redirect-url=\(encodedUrlScheme)"
+        }
         
         flizpayWebView.redirectUrl = URL(string: redirectUrlWithJwtToken)
         flizpayWebView.urlScheme = urlScheme
@@ -49,7 +60,9 @@ public class FlizpayWebView: UIViewController {
         wv.translatesAutoresizingMaskIntoConstraints = false
         
         if #available(iOS 16.4, *) {
-              wv.isInspectable = true
+            #if DEBUG
+            wv.isInspectable = true
+            #endif
         }
 
         // Set the navigation delegate to self to intercept deep links

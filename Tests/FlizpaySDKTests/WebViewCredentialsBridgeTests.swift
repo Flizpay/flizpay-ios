@@ -20,7 +20,7 @@ class WebViewCredentialsBridgeTests: XCTestCase {
         XCTAssertNotNil(script, "JavaScript interface should be injected")
     }
 
-    func testRegisterMessageHandlers() {
+    func testInjectedBridgeScriptContainsExpectedHandlerNames() {
         let injectedScript = webView.configuration.userContentController.userScripts.first?.source
 
         XCTAssertNotNil(injectedScript, "Expected bridge JavaScript to be injected")
